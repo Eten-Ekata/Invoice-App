@@ -110,7 +110,7 @@ export default function StateContext({ children }) {
   }, [amount, price, quantity, setAmount]);
 
   const calculateTotal = () => {
-    const allItems = list.map((item) => item.amount);
+    const allItems = list?.map((item) => item.amount);
 
     setTotal(collect(allItems).sum());
   };
@@ -121,8 +121,8 @@ export default function StateContext({ children }) {
 
   // Edit function
   const editRow = (id) => {
-    const editingRow = list.find((row) => row.id === id);
-    setList(list.filter((row) => row.id !== id));
+    const editingRow = list?.find((row) => row.id === id);
+    setList(list?.filter((row) => row.id !== id));
     setIsEditing(true);
     setDescription(editingRow.description);
     setQuantity(editingRow.quantity);
@@ -133,7 +133,7 @@ export default function StateContext({ children }) {
 
   // Delete function
   const deleteRow = (id) => {
-    setList(list.filter((row) => row.id !== id));
+    setList(list?.filter((row) => row.id !== id));
     // CalcSum();
     setShowModal(false);
   };
