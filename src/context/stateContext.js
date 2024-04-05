@@ -194,7 +194,8 @@ export default function StateContext({ children }) {
     status,
     setStatus,
     customerNumber,
-    setCustomerNumber
+    setCustomerNumber,
+    storedItems
   };
 
   return <State.Provider value={context}>{children}</State.Provider>;
