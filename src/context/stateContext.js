@@ -16,14 +16,13 @@ export default function StateContext({ children }) {
   }
   const storedItems = JSON.parse(localStorage.getItem('invoice'))
   const storedName = JSON.parse(localStorage.getItem('name'))
-  const storedEmail = JSON.parse(localStorage.getItem('email'))
   const storedInvoice = JSON.parse(localStorage.getItem('invoicenum'))
   const storedCustomer = JSON.parse(localStorage.getItem('customer'))
   const storedCustomerNumber = JSON.parse(localStorage.getItem('customernum'))
   const storedNote = JSON.parse(localStorage.getItem('note'))
   const [name, setName] = useState(storedName);
   const [address, setAddress] = useState("Sterling Towers, 20 Marina Rd, Lagos Island, Lagos 101223, Lagos");
-  const [email, setEmail] = useState(storedEmail);
+  const [email, setEmail] = useState('eduplc@yahoo.com');
   const [phone, setPhone] = useState('0703 092 2000');
   const [bankName, setBankName] = useState('Edubanc');
   const [bankAccount, setBankAccount] = useState('2045688364');
