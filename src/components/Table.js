@@ -3,7 +3,6 @@ import { State } from "../context/stateContext";
 
 const Table = () => {
   const { list, total, } = useContext(State);
-  // console.log(list)
   return (
     <>
      <table width="100%" className="mb-10">
@@ -17,7 +16,7 @@ const Table = () => {
             <td className="font-bold">Status</td>
           </tr>
         </thead>
-        {list.map(({ id, description, quantity, price, amount, work, status }) => (
+        {list?.map(({ id, description, quantity, price, amount, work, status }) => (
           <React.Fragment key={id}>
             <tbody>
               <tr className="h-10">
