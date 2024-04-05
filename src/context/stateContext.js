@@ -82,7 +82,7 @@ export default function StateContext({ children }) {
       setAmount("");
       setWork("");
       setStatus("");
-      setList([...list, newItems]);
+      setList([newItems]);
       setIsEditing(false);
       console.log(list);
     }
