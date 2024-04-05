@@ -1,9 +1,7 @@
 import React from 'react'
 
 const Header = () => {
-    const handlePrint =()=>{
-        window.print()
-    }
+    
   return (
     <>
    <header className="flex flex-col items-center justify-center mb-5 xl:flex-row xl:justify-between">

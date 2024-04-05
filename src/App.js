@@ -7,59 +7,35 @@ import Notes from "./components/Notes";
 import Table from "./components/Table";
 import TableForm from "./components/TableForm";
 import Dates from "./components/Dates";
-import ReactToPrint from "react-to-print";
 import { State } from "./context/stateContext";
 import { useContext } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   const {
     name,
     setName,
     address,
-    setAddress,
     email,
-    setEmail,
     phone,
-    setPhone,
     bankName,
-    setBankName,
     bankAccount,
-    setBankAccount,
-    website,
-    setWebsite,
     clientName,
     setClientName,
     clientAddress,
+    customerNumber,
+    setCustomerNumber,
     setClientAddress,
     invoiceNumber,
     setInvoiceNumber,
-    invoiceDate,
-    setInvoiceDate,
-    dueDate,
-    setDueDate,
     notes,
     setNotes,
     componentRef,
   } = useContext(State);
   const [showInvoice, setShowInvoice] = React.useState(true);
-  // const [name, setName] = React.useState('');
-  // const [address, setAddress] = React.useState('');
-  // const [email, setEmail] = React.useState('');
-  // const [phone, setPhone] = React.useState('');
-  // const [bankName, setBankName] = React.useState('');
-  // const [bankAccount, setBankAccount] = React.useState('');
-  // const [clientName, setClientName] = React.useState('');
-  // const [clientAddress, setClientAddress] = React.useState('');
-  // const [website, setWebsite] = React.useState('');
-  // const [invoiceNumber, setInvoiceNumber] = React.useState('');
-  // const [invoiceDate, setInvoiceDate] = React.useState('');
-  // const [dueDate, setDueDate] = React.useState('');
-  // const [notes, setNotes] = React.useState('');
-  // const [description, setDescription] = React.useState("");
-  // const [quantity, setQuantity] = React.useState("");
-  // const [price, setPrice] = React.useState("");
-  // const [amount, setAmount] = React.useState("");
+
   const handleDownloadPDF = () => {
     // Hide print and download buttons
     const downloadButton = document.querySelector(".download-btn");
@@ -68,25 +44,34 @@ function App() {
     const input = componentRef.current;
   
     html2canvas(input, {
-      scale: 2,
+      scale: 3, 
       scrollX: 0,
       scrollY: -window.scrollY,
+      windowWidth: document.documentElement.offsetWidth, 
+      windowHeight: document.documentElement.offsetHeight, 
+      useCORS: true, 
+      logging: true 
     }).then((canvas) => {
      
       downloadButton.style.display = "block";
   
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const pdf = new jsPDF({
+        orientation: 'portrait', 
+        unit: 'px', 
+        format: [canvas.width, canvas.height] 
+      });
+      const imgWidth = pdf.internal.pageSize.getWidth(); 
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; 
   
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       pdf.save("invoice.pdf");
     });
-  };
+};
   return (
     <>
+    <ToastContainer position="top-right" theme="colored" />
+
       <main className="p-4 md:p-8 xl:max-w-screen-lg md:max-w-screen-sm mx-auto bg-white rounded shadow-lg">
         {showInvoice ? (
           <>
@@ -115,7 +100,7 @@ function App() {
             <Notes />
             <Footer />
             </div>
-            <button onClick={()=> setShowInvoice(false)} className="mt-5 text-white font-bold bg-blue-500 py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">Edit Information </button>
+            <button onClick={()=> setShowInvoice(false)} className="mt-5 text-white font-bold bg-blue-500 py-2 px-8 rounded shadow border-2 border-blue-500 hover:bg-transparent hover:text-blue-500 transition-all duration-300">Create Invoice </button>
           </div>
           </>
         ) : (
@@ -125,7 +110,7 @@ function App() {
             <div className="flex flex-col justify-center">
               <article className="md:grid grid-cols-2 gap-10">
                 <div className="flex flex-col">
-                  <label htmlFor="name">Your full name</label>
+                  <label htmlFor="name">Cashier's name</label>
                   <input
                     type="text"
                     name="text"
@@ -139,23 +124,24 @@ function App() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="address">Enter your address</label>
+                  <label htmlFor="address">Company's Address</label>
                   <input
                     type="text"
                     name="address"
                     id="address"
-                    placeholder="Enter your address"
+                    // placeholder="Enter your address"
                     autoComplete="off"
                     maxLength={96}
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    disabled
+                    // onChange={(e) => setAddress(e.target.value)}
                   />
                 </div>
               </article>
 
-              <article className="md:grid grid-cols-3 gap-10">
+              <article className="md:grid grid-cols-2 gap-10">
                 <div className="flex flex-col">
-                  <label htmlFor="email">Enter your email</label>
+                  <label htmlFor="email">Company's Email</label>
                   <input
                     type="email"
                     name="email"
@@ -164,42 +150,30 @@ function App() {
                     maxLength={255}
                     autoComplete="off"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    disabled
+                    // onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="website">Enter your website</label>
-                  <input
-                    type="url"
-                    name="website"
-                    id="website"
-                    placeholder="Enter your website"
-                    maxLength={96}
-                    autoComplete="off"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label htmlFor="phone">Enter your phone</label>
+                  <label htmlFor="phone">Company's Phone Number</label>
                   <input
                     type="text"
                     name="phone"
                     id="phone"
-                    placeholder="Enter your phone"
+                    placeholder="Enter your phone number"
                     maxLength={12}
                     autoComplete="off"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    disabled
+                    // onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
               </article>
 
               <article className="md:grid grid-cols-2 gap-10">
                 <div className="flex flex-col">
-                  <label htmlFor="bankName">Enter your bank name</label>
+                  <label htmlFor="bankName">Bank</label>
                   <input
                     type="text"
                     name="bankName"
@@ -208,60 +182,72 @@ function App() {
                     maxLength={56}
                     autoComplete="off"
                     value={bankName}
-                    onChange={(e) => setBankName(e.target.value)}
+                    disabled
+                    // onChange={(e) => setBankName(e.target.value)}
                   />
                 </div>
 
                 <div className="flex flex-col">
                   <label htmlFor="bankAccount">
-                    Enter your bank account number
+                    Account number
                   </label>
                   <input
                     type="text"
                     name="bankAccount"
                     id="bankAccount"
                     placeholder="Enter your bank account number"
-                    maxLength={20}
+                    maxLength={10}
                     autoComplete="off"
                     value={bankAccount}
-                    onChange={(e) => setBankAccount(e.target.value)}
+                    disabled
+                    // onChange={(e) => setBankAccount(e.target.value)}
                   />
                 </div>
               </article>
 
               <article className="md:grid grid-cols-2 gap-10 md:mt-16">
                 <div className="flex flex-col">
-                  <label htmlFor="clientName">Enter your client's name</label>
+                  <label htmlFor="clientName">Customer's name</label>
                   <input
                     type="text"
                     name="clientName"
                     id="clientName"
-                    placeholder="Enter your client's name"
+                    placeholder="Enter customer's name"
                     maxLength={56}
                     autoComplete="off"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
                   />
                 </div>
+                <div className="flex flex-col">
+                  <label htmlFor="customerNumber">Customer's Phone Number</label>
+                  <input
+                    type="text"
+                    name="customerNumber"
+                    id="customerNumber"
+                    placeholder="Enter customer's phone number"
+                    maxLength={11}
+                    autoComplete="off"
+                    value={customerNumber}
+                    onChange={(e) => setCustomerNumber(e.target.value)}
+                  />
+                </div>
 
                 <div className="flex flex-col">
                   <label htmlFor="clientAddress">
-                    Enter your client's address
+                  Customer's address
                   </label>
                   <input
                     type="text"
                     name="clientAddress"
                     id="clientAddress"
-                    placeholder="Enter your client's address"
+                    placeholder="Enter your customer's address"
                     maxLength={96}
                     autoComplete="off"
                     value={clientAddress}
                     onChange={(e) => setClientAddress(e.target.value)}
                   />
                 </div>
-              </article>
-
-              <article className="md:grid grid-cols-3 gap-10">
                 <div className="flex flex-col">
                   <label htmlFor="invoiceNumber">Invoice Number</label>
                   <input
@@ -271,33 +257,9 @@ function App() {
                     placeholder="Invoice Number"
                     autoComplete="off"
                     value={invoiceNumber}
+                    maxLength={6}
                     onChange={(e) => setInvoiceNumber(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label htmlFor="invoiceDate">Invoice Date</label>
-                  <input
-                    type="date"
-                    name="invoiceDate"
-                    id="invoiceDate"
-                    placeholder="Invoice Date"
-                    autoComplete="off"
-                    value={invoiceDate}
-                    onChange={(e) => setInvoiceDate(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label htmlFor="dueDate">Due Date</label>
-                  <input
-                    type="date"
-                    name="dueDate"
-                    id="dueDate"
-                    placeholder="Invoice Date"
-                    autoComplete="off"
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
+                    required
                   />
                 </div>
               </article>

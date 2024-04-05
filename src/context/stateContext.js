@@ -6,27 +6,44 @@ import collect from "collect.js";
 export const State = createContext();
 
 export default function StateContext({ children }) {
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [bankAccount, setBankAccount] = useState("");
+  function getCurrentDate() {
+    const currentDate = new Date();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const year = currentDate.getFullYear();
+  
+    return `${month}/${day}/${year}`;
+  }
+  const storedItems = JSON.parse(localStorage.getItem('invoice'))
+  const storedName = JSON.parse(localStorage.getItem('name'))
+  const storedEmail = JSON.parse(localStorage.getItem('email'))
+  const storedInvoice = JSON.parse(localStorage.getItem('invoicenum'))
+  const storedCustomer = JSON.parse(localStorage.getItem('customer'))
+  const storedCustomerNumber = JSON.parse(localStorage.getItem('customernum'))
+  const storedNote = JSON.parse(localStorage.getItem('note'))
+  const [name, setName] = useState(storedName);
+  const [address, setAddress] = useState("Sterling Towers, 20 Marina Rd, Lagos Island, Lagos 101223, Lagos");
+  const [email, setEmail] = useState(storedEmail);
+  const [phone, setPhone] = useState('0703 092 2000');
+  const [bankName, setBankName] = useState('Edubanc');
+  const [bankAccount, setBankAccount] = useState('2045688364');
   const [website, setWebsite] = useState("");
-  const [clientName, setClientName] = useState("");
+  const [clientName, setClientName] = useState(storedCustomer);
   const [clientAddress, setClientAddress] = useState("");
-  const [invoiceNumber, setInvoiceNumber] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState(storedInvoice);
+  const [invoiceDate, setInvoiceDate] = useState(getCurrentDate());
   const [dueDate, setDueDate] = useState("");
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState(storedNote);
   const [description, setDescription] = useState("");
+  const [work, setWork] = useState("")
+  const [status, setStatus] = useState("")
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [amount, setAmount] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(storedItems);
+  const [customerNumber, setCustomerNumber] = useState(storedCustomerNumber)
   const [total, setTotal] = useState(0);
   const [width] = useState(641);
-  // const [invoices, setInvoices] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -47,8 +64,8 @@ export default function StateContext({ children }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!description || !quantity || !price) {
-      toast.error("Please fill in all inputs");
+    if (!description || !quantity || !price || !work || !status) {
+      toast.error("Please fill in all line items");
     } else {
       const newItems = {
         id: uuidv4(),
@@ -56,16 +73,32 @@ export default function StateContext({ children }) {
         quantity,
         price,
         amount,
+        work,
+        status
       };
       setDescription("");
       setQuantity("");
       setPrice("");
       setAmount("");
+      setWork("");
+      setStatus("");
       setList([...list, newItems]);
       setIsEditing(false);
       console.log(list);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem('invoice', JSON.stringify(list))
+    localStorage.setItem('name', JSON.stringify(name))
+    localStorage.setItem('email', JSON.stringify(email))
+    localStorage.setItem('phone', JSON.stringify(phone))
+    localStorage.setItem('note', JSON.stringify(notes))
+    localStorage.setItem('customer', JSON.stringify(clientName))
+    localStorage.setItem('invoicenum', JSON.stringify(invoiceNumber))
+    localStorage.setItem('customernum', JSON.stringify(customerNumber))
+  
+  }, [list, name, email, phone, bankName, invoiceNumber, notes, clientName, customerNumber])
 
   // Calculate items amount function
   useEffect(() => {
@@ -94,6 +127,8 @@ export default function StateContext({ children }) {
     setDescription(editingRow.description);
     setQuantity(editingRow.quantity);
     setPrice(editingRow.price);
+    setWork(editingRow.work);
+    setStatus(editingRow.status);
   };
 
   // Delete function
@@ -154,6 +189,12 @@ export default function StateContext({ children }) {
     deleteRow,
     showLogoutModal,
     setShowLogoutModal,
+    work,
+    setWork,
+    status,
+    setStatus,
+    customerNumber,
+    setCustomerNumber
   };
 
   return <State.Provider value={context}>{children}</State.Provider>;
