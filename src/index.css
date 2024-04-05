@@ -40,7 +40,7 @@
 
 body {
   margin: 0;
-  font-family: "Reem Kufi", sans-serif;
+  /* font-family: "Reem Kufi", sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 18px;

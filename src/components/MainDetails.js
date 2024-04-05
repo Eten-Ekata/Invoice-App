@@ -1,6 +1,8 @@
-import React from 'react'
+import { useContext } from "react";
+import { State } from "../context/stateContext";
 
-const MainDetails = ({name, address}) => {
+const MainDetails = () => {
+  const { name, address } = useContext(State);
   return (
     <>
     <section className="flex flex-col items-end justify-end">
