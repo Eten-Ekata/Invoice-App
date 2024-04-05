@@ -122,7 +122,7 @@ const TableForm = () => {
 
     </tr>
   </thead>
-  {list?.map(({ id, description, quantity, price, amount, work, status}) => (
+  {list.map(({ id, description, quantity, price, amount, work, status}) => (
     <React.Fragment key={id}>
       <tbody>
         <tr className="h-10">

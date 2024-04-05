@@ -16,13 +16,14 @@ export default function StateContext({ children }) {
   }
   const storedItems = JSON.parse(localStorage.getItem('invoice'))
   const storedName = JSON.parse(localStorage.getItem('name'))
+  const storedEmail = JSON.parse(localStorage.getItem('email'))
   const storedInvoice = JSON.parse(localStorage.getItem('invoicenum'))
   const storedCustomer = JSON.parse(localStorage.getItem('customer'))
   const storedCustomerNumber = JSON.parse(localStorage.getItem('customernum'))
   const storedNote = JSON.parse(localStorage.getItem('note'))
   const [name, setName] = useState(storedName);
   const [address, setAddress] = useState("Sterling Towers, 20 Marina Rd, Lagos Island, Lagos 101223, Lagos");
-  const [email, setEmail] = useState('eduplc@yahoo.com');
+  const [email, setEmail] = useState(storedEmail);
   const [phone, setPhone] = useState('0703 092 2000');
   const [bankName, setBankName] = useState('Edubanc');
   const [bankAccount, setBankAccount] = useState('2045688364');
@@ -81,7 +82,7 @@ export default function StateContext({ children }) {
       setAmount("");
       setWork("");
       setStatus("");
-      setList([newItems]);
+      setList([...list, newItems]);
       setIsEditing(false);
       console.log(list);
     }
@@ -109,7 +110,7 @@ export default function StateContext({ children }) {
   }, [amount, price, quantity, setAmount]);
 
   const calculateTotal = () => {
-    const allItems = list?.map((item) => item.amount);
+    const allItems = list.map((item) => item.amount);
 
     setTotal(collect(allItems).sum());
   };
@@ -120,8 +121,8 @@ export default function StateContext({ children }) {
 
   // Edit function
   const editRow = (id) => {
-    const editingRow = list?.find((row) => row.id === id);
-    setList(list?.filter((row) => row.id !== id));
+    const editingRow = list.find((row) => row.id === id);
+    setList(list.filter((row) => row.id !== id));
     setIsEditing(true);
     setDescription(editingRow.description);
     setQuantity(editingRow.quantity);
@@ -132,7 +133,7 @@ export default function StateContext({ children }) {
 
   // Delete function
   const deleteRow = (id) => {
-    setList(list?.filter((row) => row.id !== id));
+    setList(list.filter((row) => row.id !== id));
     // CalcSum();
     setShowModal(false);
   };
