@@ -14,7 +14,7 @@ export default function StateContext({ children }) {
   
     return `${month}/${day}/${year}`;
   }
-  const storedItems = JSON.parse(localStorage.getItem('invoice'))
+  const storedItems = JSON.parse(localStorage.getItem('invoice') || [])
   const storedName = JSON.parse(localStorage.getItem('name'))
   const storedEmail = JSON.parse(localStorage.getItem('email'))
   const storedInvoice = JSON.parse(localStorage.getItem('invoicenum'))
