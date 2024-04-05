@@ -21,6 +21,10 @@ function App() {
   const [invoiceDate, setInvoiceDate] = React.useState('');
   const [dueDate, setDueDate] = React.useState('');
   const [notes, setNotes] = React.useState('');
+  const [description, setDescription] = React.useState("");
+  const [quantity, setQuantity] = React.useState("");
+  const [price, setPrice] = React.useState("");
+  const [amount, setAmount] = React.useState("");
   return (
     <>
       <main className="p-5 m-5 xl:max-w-4xl md:max-w-xl md:max-auto xl:max-auto bg-white rounded shadow">
@@ -182,6 +186,11 @@ function App() {
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
                   />
+
+                  {/* This is our table form */}
+              <article>
+                <TableForm />
+              </article>
 
 <label htmlFor="notes">Additional Notes</label>
               <textarea
